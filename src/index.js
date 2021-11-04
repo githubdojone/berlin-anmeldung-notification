@@ -1,24 +1,24 @@
 require('dotenv/config')
 const puppeteer = require('puppeteer-extra')
-var nodemailer = require('nodemailer')
-var cron = require('node-cron')
+const nodemailer = require('nodemailer')
+const cron = require('node-cron')
 
 const { MAIN_URL, EMAIL, EMAIL_PASSWORD, EMAIL_PROVIDER } = process.env
 
-var mailOptions = {
-  from: EMAIL,
-  to: EMAIL,
-  subject: 'Berlin Anmeldung Avaialability',
-  text: '',
-}
-
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: EMAIL_PROVIDER,
   auth: {
     user: EMAIL,
     pass: EMAIL_PASSWORD,
   },
 })
+
+let mailOptions = {
+  from: EMAIL,
+  to: EMAIL,
+  subject: 'Berlin Anmeldung Avaialability',
+  text: '',
+}
 
 const scraping = async () => {
   const browser = await puppeteer.launch({ headless: true })
@@ -36,8 +36,8 @@ const scraping = async () => {
 
     const tableMonths = await page.$$('.calendar-month-table')
 
-    var currentMonth = []
-    var nextMonth = []
+    let currentMonth = []
+    let nextMonth = []
 
     for (let i = 0; i < tableMonths.length; i++) {
       const table = tableMonths[i]
@@ -68,7 +68,7 @@ const scraping = async () => {
     console.log(
       `For current month we've found ${currentMonth.length} day(s) (${currentMonth}) - for next month we've found ${nextMonth.length} day(s) (${nextMonth})`
     )
-    return `For current month we've found ${currentMonth.length} day(s) (${currentMonth}) - for next month we've found ${nextMonth.length} day(s) (${nextMonth})`
+    return `For current month we've found ${currentMonth.length} day(s) (${currentMonth}) - for next month we've found ${nextMonth.length} day(s) (${nextMonth}) - URL: ${MAIN_URL}`
   } catch (err) {
     await browser.close()
 
